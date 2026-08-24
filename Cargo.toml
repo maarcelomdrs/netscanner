@@ -1,0 +1,16 @@
+[package]
+name = "netscanner"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+colored = "2.1"
+pcap = "0.10"
+pnet = "0.34"
+rayon = "1.8"
+clap = { version = "4.4", features = ["derive"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+native-tls = "0.2.18"
+x509-parser = "0.18.1"
+comfy-table = "8.0.0"
