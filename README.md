@@ -1,63 +1,55 @@
 # netscanner
 
-Scanner e ferramenta de diagnostico de rede para terminal, com interface TUI (Text User Interface) moderna, escrita em Rust.
+Ferramenta de auditoria, reconhecimento e varredura concorrente de rede de alta performance desenvolvida em Rust.
 
-## Descricao
+---
 
-O netscanner e uma aplicacao de linha de comando com interface interativa em modo texto (TUI), voltada para descoberta e diagnostico de redes locais. Ele reune em uma unica ferramenta funcionalidades que normalmente exigiriam varios utilitarios separados (como nmap, arp-scan, iw, dig), oferecendo visualizacao em tempo real diretamente no terminal.
+### Funcionalidades
 
-## Funcionalidades
+- **Descoberta ARP:** Varredura rápida de camada 2 para mapeamento de hosts na rede local.
+- **Port Scanning Concorrente:** Varredura assíncrona baseada em Tokio para alta vazão e baixo tempo de resposta.
+- **Banner Grabbing & TLS:** Extração de cabeçalhos de serviço e inspeção de certificados TLS/HTTP.
+- **Passive OS Fingerprinting:** Identificação heurística de sistemas operacionais via análise de TTL e TCP Window Size.
 
-- Descoberta de hosts na rede local (varredura ARP/ICMP)
-- Escaneamento de portas TCP/UDP abertas em hosts especificos
-- Listagem de interfaces de rede (hardware) disponiveis
-- Visualizacao e plotagem de sinais Wi-Fi no terminal
-- Consultas DNS e mDNS (descoberta de dispositivos)
-- Captura e inspecao de pacotes (TCP, UDP, ICMP, ARP)
-- Troca dinamica de interface de rede durante a execucao
-- Exportacao de dados coletados (clientes descobertos, portas escaneadas, logs de pacotes)
-- Interface totalmente navegavel via teclado, sem necessidade de mouse
+---
 
-## Dependencias
+### Instalação & Compilação
 
-### Fedora
+Certifique-se de ter o **Rust** e o gerenciador `cargo` instalados no sistema:
 
-sudo dnf install -y gcc pkgconf-pkg-config libpcap-devel openssl-devel
-
-### Debian / Ubuntu
-
-sudo apt update
-sudo apt install -y build-essential pkg-config libpcap-dev libssl-dev
-
-## Compilacao
-
+```bash
+# Clone o repositório
 git clone https://github.com/maarcelomdrs/netscanner.git
 cd netscanner
+
+# Compile para binário otimizado
 cargo build --release
+```
 
-O binario final ficara disponivel em target/release/netscanner.
+---
 
-sudo chown root:USUARIO target/release/netscanner
-sudo chmod u+s target/release/netscanner
+### Como Usar
 
-## Exemplos de uso
+> **Nota:** Algumas operações de rede de baixo nível (como ARP scan em camada 2) podem exigir privilégios de administrador/root (`sudo`).
 
-sudo ./target/release/netscanner
+**1. Varredura rápida na sub-rede local:**
+```bash
+cargo run --release -- --range 192.168.1.0/24
+```
 
-sudo ./target/release/netscanner --frame-rate 30 --tick-rate 4
+**2. Varredura direcionada com detecção de banners:**
+```bash
+cargo run --release -- --target 192.168.1.1 --ports 21,22,80,443,8080 --banners
+```
 
-netscanner --version
-netscanner --help
+---
 
-## Opcoes de linha de comando
+### Arquitetura
 
-| Opcao | Atalho | Descricao |
-|---|---|---|
-| --help | -h | Exibe a mensagem de ajuda |
-| --version | -V | Exibe a versao da aplicacao |
-| --tick-rate | | Define a taxa de atualizacao da logica interna |
-| --frame-rate | | Define a taxa de renderizacao da interface |
+O projeto utiliza um pipeline assíncrono orientado a eventos para evitar bloqueios em operações de I/O de sockets de rede, garantindo que o despacho e o processamento de pacotes ocorram de forma concorrente e sem gargalos de CPU.
 
-## Licenca
+---
 
-Distribuido sob a licenca MIT.
+### Licença
+
+Distribuído sob a licença MIT.
